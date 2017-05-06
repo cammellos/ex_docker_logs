@@ -1,19 +1,26 @@
 # ExDockerLogs
 
-**TODO: Add description**
+A simple library to read logs as a Stream from a docker container
 
-## Installation
+## Example usage
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `ex_docker_logs` to your list of dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [{:ex_docker_logs, "~> 0.1.0"}]
-end
+```
+stream = ExDockerLogs.ContainerLogs.stream_logs("b4b29039b1b2")
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/ex_docker_logs](https://hexdocs.pm/ex_docker_logs).
+Will return a stream.
 
+```
+entry = Enum.take(stream, 1)
+```
+
+Entry is a struct:
+
+```
+%ExDockerLogs.LogEntry{
+  container_id: "b4b29039b1b2",
+  message: "some text",
+  stream_type: "stdout"}
+```
+
+Stream types are `stdout`, `stdin` and `stderr`
