@@ -10,7 +10,6 @@ use Mix.Config
 
 # You can configure for your application as:
 #
-config :ex_docker_logs, docker_host: System.get_env("DOCKER_HOST") || "http+unix:///var/run/docker.sock"
 #
 # And access this configuration in your application as:
 #

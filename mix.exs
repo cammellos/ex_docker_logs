@@ -16,7 +16,10 @@ defmodule ExDockerLogs.Mixfile do
   end
 
   defp deps do
-    [{:httpoison, "~> 0.11.1"},
-    {:mix_test_watch, "~> 0.3", only: :dev, runtime: false}]
+    [
+      {:httpoison, "~> 0.11.1"},
+      {:dogma, "~> 0.1", only: :dev},
+      {:mix_test_watch, "~> 0.3", only: :dev, runtime: false}
+    ]
   end
 end
