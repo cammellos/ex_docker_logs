@@ -21,7 +21,7 @@ defmodule ExDockerLogs.ContainerLogs do
     stderr: true,
     since: 0,
     timestamps: 0,
-    tail: "all"
+    tail: 0
   ]
 
   @moduledoc """

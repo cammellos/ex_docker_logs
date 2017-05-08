@@ -24,7 +24,7 @@ You can set the following options:
 
 `timestamps`: defaults to `0`
 
-`tail`: defaults to `all`
+`tail`: defaults to `0`
 
 See the docker API for reference
 
