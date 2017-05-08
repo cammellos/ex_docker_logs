@@ -11,13 +11,14 @@ defmodule ExDockerLogs.Mixfile do
   end
 
   def application do
-    [applications: [:httpoison],
+    [applications: [:httpoison, :poison],
       extra_applications: [:logger]]
   end
 
   defp deps do
     [
       {:httpoison, "~> 0.11.1"},
+      {:poison, "~> 3.0"},
       {:dogma, "~> 0.1", only: :dev},
       {:mix_test_watch, "~> 0.3", only: :dev, runtime: false}
     ]
