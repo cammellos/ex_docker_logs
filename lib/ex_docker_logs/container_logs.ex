@@ -81,6 +81,7 @@ defmodule ExDockerLogs.ContainerLogs do
   defp terminate_stream({stream_id, _container_id}) do
     Logger.debug "terminating stream"
     {:ok, _} = :hackney.stop_async(stream_id)
+    Logger.debug "stream terminated"
   end
 
   defp handle_chunck(stream_type, data, container_id) do

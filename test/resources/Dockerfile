@@ -1,3 +1,5 @@
 FROM alpine
 
-CMD while true; do echo 'Hello' ; sleep 1; done
+ADD ./run.sh /run.sh
+
+CMD /run.sh
