@@ -65,6 +65,7 @@ defmodule ExDockerLogsTest do
   defp build_image(name) do
     {:ok, tar_file} = File.read("./test/resources/dockerfile.tar.gz")
     url = "http+unix://%2fvar%2frun%2fdocker.sock/build?t=#{name}"
+    Logger.debug("Hitting #{url}")
     HTTPoison.post url, tar_file
   end
 
