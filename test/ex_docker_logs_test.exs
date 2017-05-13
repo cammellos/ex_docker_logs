@@ -9,13 +9,12 @@ defmodule ExDockerLogsTest do
 
     image_name = "ex_docker_logs"
 
-    {:ok, %{status_code: 200}} = IO.inspect(build_image(image_name))
+    {:ok, %{status_code: 200}} = build_image(image_name)
     {:ok, container_id} = create_container(image_name)
     {:ok, _body} = start_container(container_id)
 
     on_exit("clean_up_image_#{image_name}_#{container_id}", fn ->
-      Logger.debug "Cleanup tests"
-      IO.inspect("Deleting image #{image_name} and #{container_id}")
+      Logger.debug("Deleting image #{image_name} and #{container_id}")
       stop_container(container_id)
       delete_container(container_id)
       delete_image(image_name)

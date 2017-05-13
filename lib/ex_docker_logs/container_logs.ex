@@ -63,11 +63,13 @@ defmodule ExDockerLogs.ContainerLogs do
         raise "Received code #{code}"
       %HTTPoison.AsyncChunk{id: ^stream_id, chunk: chk} ->
         case chk do
-          <<stream_type::8, 0, 0, 0, _size::32,data::binary >> ->
+          <<stream_type::8, 0, 0, 0, size::32,data::binary >> ->
+            Logger.debug("Got chunk of #{size} and #{byte_size(data)}")
             {
               [handle_chunck(stream_type, data, container_id)],
               {stream_id, container_id}
             }
+          data -> {handle_chunck(1, data, container_id), {stream_id, container_id}}
         end
       %HTTPoison.AsyncEnd{id: ^stream_id} ->
         Logger.debug "Stream ended"
