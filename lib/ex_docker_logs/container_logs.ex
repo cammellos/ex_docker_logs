@@ -62,6 +62,7 @@ defmodule ExDockerLogs.ContainerLogs do
       %HTTPoison.AsyncStatus{ id: ^stream_id, code: code} ->
         raise "Received code #{code}"
       %HTTPoison.AsyncChunk{id: ^stream_id, chunk: chk} ->
+        IO.inspect(chk)
         case chk do
           <<stream_type::8, 0, 0, 0, size::32,data::binary >> ->
             Logger.debug("Got chunk of #{size} and #{byte_size(data)}")
