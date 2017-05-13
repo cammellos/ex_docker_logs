@@ -73,13 +73,13 @@ defmodule ExDockerLogs.ContainerLogs do
                 {stream_id, container_id, [size: 0, data: "", stream_type: nil]}
               }
             else
-              {[], {stream_id, container_id, [size: size, data: all_data, stream_type: old_stream_type]}}
+              {[], {stream_id, container_id, [size: size, data: all_data, stream_type: stream_type]}}
             end
           data ->
            Logger.debug("Reading chunk of #{old_size} and #{byte_size(data)}")
            all_data = old_data <> data
             if old_size === byte_size(all_data) do
-              {handle_chunck(old_stream_type, all_data, container_id), {stream_id, container_id}, [size: 0, data: "", stream_type: nil]}
+              {[handle_chunck(old_stream_type, all_data, container_id)], {stream_id, container_id, [size: 0, data: "", stream_type: nil]}}
             else
               {[], {stream_id, container_id, [size: old_size, data: all_data, stream_type: old_stream_type]}}
             end
