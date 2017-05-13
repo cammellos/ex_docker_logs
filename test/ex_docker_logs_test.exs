@@ -48,7 +48,7 @@ defmodule ExDockerLogsTest do
 
     {start, _} = Integer.parse(List.first(entries).message)
 
-    start..start+5
+    start..start+4
     |> Stream.with_index
     |> Enum.each(fn({entry, i}) ->
       assert Integer.to_string(entry) == Enum.at(messages, i)
