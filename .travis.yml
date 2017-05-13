@@ -1,9 +1,18 @@
 sudo: required
+dist: trusty
 language: elixir
 elixir:
   - 1.4.2
-services:
-  - docker
-
+env:
+  - DOCKER_VERSION=1.11.1
+  - DOCKER_VERSION=1.10.3
+  - DOCKER_VERSION=1.9.1
+  - DOCKER_VERSION=1.8.2
+  - DOCKER_VERSION=1.7.1
 before_install:
-  - echo $DOCKER_HOST
+ - docker --version
+before_script:
+ - sudo ./test/resources/script/install_docker.sh ${DOCKER_VERSION}
+ - uname -a
+ - docker --version
+ - docker info
