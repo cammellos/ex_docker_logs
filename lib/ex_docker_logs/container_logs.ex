@@ -51,14 +51,14 @@ defmodule ExDockerLogs.ContainerLogs do
       timeout: :infinity,
       recv_timeout: :infinity,
       params: opts)
-    {id, container_id}
+    {id, container_id, [size: 0, data: "", stream_type: nil]}
   end
 
-  def next({stream_id, container_id}) do
+  def next({stream_id, container_id, [size: old_size, data: old_data, stream_type: old_stream_type]}) do
     receive do
       %HTTPoison.AsyncStatus{ id: ^stream_id, code: 200 } ->
         Logger.debug "Received code 200, starting stream"
-        {[], {stream_id, container_id}}
+        {[], {stream_id, container_id, [size: old_size, data: old_data, stream_type: nil]}}
       %HTTPoison.AsyncStatus{ id: ^stream_id, code: code} ->
         raise "Received code #{code}"
       %HTTPoison.AsyncChunk{id: ^stream_id, chunk: chk} ->
@@ -66,22 +66,30 @@ defmodule ExDockerLogs.ContainerLogs do
         case chk do
           <<stream_type::8, 0, 0, 0, size::32,data::binary >> ->
             Logger.debug("Got chunk of #{size} and #{byte_size(data)}")
-            {
-              [handle_chunck(stream_type, data, container_id)],
-              {stream_id, container_id}
-            }
+            all_data = old_data <> data
+            if size === byte_size(all_data) do
+              {
+                [handle_chunck(stream_type, all_data, container_id)],
+                {stream_id, container_id, [size: 0, data: "", stream_type: nil]}
+              }
+            else
+              {
+                [],
+                {stream_id, container_id, [size: size, data: all_data, stream_type: old_stream_type]}
+              }
+            end
           data -> {handle_chunck(1, data, container_id), {stream_id, container_id}}
         end
       %HTTPoison.AsyncEnd{id: ^stream_id} ->
         Logger.debug "Stream ended"
-        {:halt, {stream_id, container_id}}
+        {:halt, {stream_id, container_id, [size: 0, data: old_data, stream_type: nil]}}
       %HTTPoison.Error{id: ^stream_id, reason: reason} ->
         raise "Stream error #{reason}"
-      _ -> {[], {stream_id, container_id}}
+      _ -> {[], {stream_id, container_id, [size: 0, data: old_data, stream_type: nil]}}
     end
   end
 
-  defp terminate_stream({stream_id, _container_id}) do
+  defp terminate_stream({stream_id, _container_id, _data}) do
     Logger.debug "terminating stream"
     {:ok, _} = :hackney.stop_async(stream_id)
     Logger.debug "stream terminated"
