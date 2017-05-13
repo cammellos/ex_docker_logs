@@ -1,0 +1,9 @@
+sudo: required
+language: elixir
+elixir:
+  - 1.4.2
+services:
+  - docker
+
+before_install:
+  - echo $DOCKER_HOST
